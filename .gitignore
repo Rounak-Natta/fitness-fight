@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.env*
+.vercel
+.netlify
+public/sw.js
+public/swe-worker-*.js
+.DS_Store
