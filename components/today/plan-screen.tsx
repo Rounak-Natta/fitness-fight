@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, Lock, X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ChevronDown, Lock, Search, X } from "lucide-react";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { ExerciseRow } from "@/components/exercise/exercise-row";
 import { exercises } from "@/data/exercises";
@@ -15,6 +15,19 @@ export function PlanScreen() {
   const data = useAppData();
   const currentWeek = data ? calculateProgramWeek(data.programStartDate) : 1;
   const [selected, setSelected] = useState<{ day: DayKey; week: number } | null>(null);
+  const [query, setQuery] = useState("");
+
+  const filteredLibrary = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return martialArtsLibrary;
+    const result: typeof martialArtsLibrary = {};
+    for (const [category, techniques] of Object.entries(martialArtsLibrary)) {
+      const matches = techniques.filter((t) => t.name.toLowerCase().includes(q));
+      if (matches.length) result[category] = matches;
+    }
+    return result;
+  }, [query]);
+  const hasResults = Object.keys(filteredLibrary).length > 0;
 
   return (
     <AppShell>
@@ -60,21 +73,45 @@ export function PlanScreen() {
           <h2 className="mt-2 text-xl font-semibold">Martial-arts movement</h2>
           <p className="muted mt-2 text-sm leading-6">Practice every technique slowly, stay balanced, and return to a stable stance after each movement.</p>
         </div>
-        <div className="space-y-3">
-          {Object.entries(martialArtsLibrary).map(([category, techniques]) => (
-            <div key={category} className="surface rounded-2xl p-4">
-              <h3 className="text-sm font-semibold">{category}</h3>
-              <div className="mt-3 divide-y divide-[color:var(--line)]">
-                {techniques.map((technique, index) => (
-                  <Link key={`${technique.id}-${index}`} href={`/exercise/${technique.id}`} className="flex min-h-12 items-center gap-3 py-2">
-                    <span className="min-w-0 flex-1 text-sm font-medium">{technique.name}</span>
-                    <span className="muted text-[11px] uppercase tracking-[.1em]">Control · balance</span>
-                  </Link>
-                ))}
+
+        <label className="surface mb-3 flex min-h-12 items-center gap-2.5 rounded-2xl px-4">
+          <Search className="muted shrink-0" size={17} />
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search techniques (e.g. jab, kick, guard)"
+            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[color:var(--muted)]"
+            aria-label="Search martial-arts techniques"
+          />
+          {query && (
+            <button onClick={() => setQuery("")} aria-label="Clear search" className="muted flex h-6 w-6 shrink-0 items-center justify-center rounded-full subtle">
+              <X size={13} />
+            </button>
+          )}
+        </label>
+
+        {hasResults ? (
+          <div className="space-y-3">
+            {Object.entries(filteredLibrary).map(([category, techniques]) => (
+              <div key={category} className="surface rounded-2xl p-4">
+                <h3 className="text-sm font-semibold">{category}</h3>
+                <div className="mt-3 divide-y divide-[color:var(--line)]">
+                  {techniques.map((technique, index) => (
+                    <Link key={`${technique.id}-${index}`} href={`/exercise/${technique.id}`} className="flex min-h-12 items-center gap-3 py-2">
+                      <span className="min-w-0 flex-1 text-sm font-medium">{technique.name}</span>
+                      <span className="muted text-[11px] uppercase tracking-[.1em]">Control · balance</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="surface rounded-2xl p-5 text-center">
+            <p className="text-sm font-medium">No techniques match &ldquo;{query}&rdquo;</p>
+            <p className="muted mt-1 text-xs">Try a shorter search, like &ldquo;jab&rdquo; or &ldquo;kick&rdquo;.</p>
+          </div>
+        )}
         <p className="muted mt-4 text-xs leading-5">{martialArtsSafety}</p>
       </section>
 

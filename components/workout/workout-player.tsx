@@ -6,6 +6,7 @@ import { ArrowLeft, Check, ChevronLeft, ChevronRight, Minus, MoreHorizontal, Plu
 import { exercises } from "@/data/exercises";
 import { dayOrder, routines, type DayKey } from "@/data/routines";
 import { ExerciseVisual } from "@/components/exercise/exercise-visual";
+import { CategoryPill } from "@/components/exercise/category-badge";
 import { Timer } from "@/components/workout/timer";
 import { calculateProgramWeek, dayKeyFromDate, formatDuration, toLocalDateKey } from "@/lib/dates";
 import {
@@ -250,8 +251,8 @@ export function WorkoutPlayer() {
       <div className="px-4 pt-3">
         <ExerciseVisual exercise={exercise} />
         <div className="mt-5 text-center">
-          <p className="accent text-xs font-semibold uppercase tracking-[.16em]">{exercise.category}</p>
-          <h1 className="mt-2 text-[30px] font-semibold tracking-[-.035em]">{exercise.name}</h1>
+          <div className="flex justify-center"><CategoryPill category={exercise.category} /></div>
+          <h1 className="mt-3 text-[30px] font-semibold tracking-[-.035em]">{exercise.name}</h1>
           <p className="mt-2 text-xl font-semibold">{exercise.target}</p>
           <p className="muted mx-auto mt-3 max-w-sm text-sm leading-6">{exercise.instructions}</p>
         </div>

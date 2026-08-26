@@ -60,10 +60,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .border-line { border-color: var(--line); }
 .shadow-soft { box-shadow: var(--shadow); }
 
-.exercise-visual img {
+.exercise-visual svg {
   display: block;
   user-select: none;
-  -webkit-user-drag: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

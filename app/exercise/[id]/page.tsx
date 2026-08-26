@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 import { exercises } from "@/data/exercises";
 import { ExerciseVisual } from "@/components/exercise/exercise-visual";
+import { CategoryPill } from "@/components/exercise/category-badge";
 
 export default async function ExercisePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -31,8 +32,11 @@ export default async function ExercisePage({ params }: { params: Promise<{ id: s
     <main className="app-frame min-h-dvh px-5 pb-10 pt-5">
       <Link href="/" className="muted inline-flex min-h-11 items-center gap-2 text-sm font-medium"><ArrowLeft size={18} /> Back</Link>
       <div className="mt-3"><ExerciseVisual exercise={exercise} /></div>
-      <p className="accent mt-6 text-xs font-semibold uppercase tracking-[.16em]">{exercise.category}</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-[-.03em]">{exercise.name}</h1>
+      {exercise.imageSource && exercise.imageCredit && (
+        <p className="muted mt-2 text-[10px] leading-4">Photo/animation reference: {exercise.imageCredit} · {exercise.imageLicense ?? "licensed"} · <a className="underline underline-offset-2" href={exercise.imageSource} target="_blank" rel="noreferrer">source</a></p>
+      )}
+      <div className="mt-6"><CategoryPill category={exercise.category} /></div>
+      <h1 className="mt-3 text-3xl font-semibold tracking-[-.03em]">{exercise.name}</h1>
       <p className="mt-2 text-lg font-semibold">{exercise.target}</p>
 
       <section className="mt-7 space-y-3">

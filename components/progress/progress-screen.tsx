@@ -1,5 +1,6 @@
 "use client";
 
+import { CalendarCheck, Flame, ListChecks, TrendingUp } from "lucide-react";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { ProgressGrid } from "@/components/progress/progress-grid";
 import { calculateProgramWeek } from "@/lib/dates";
@@ -20,10 +21,10 @@ export function ProgressScreen() {
   const week = data ? calculateProgramWeek(data.programStartDate) : 1;
   const sessions = data?.completedSessions ?? [];
   const stats = [
-    ["Current streak", `${currentStreak(sessions)} days`],
-    ["Current week", `Week ${week}`],
-    ["Completed", `${completedInWeek(sessions, week)} / 7 days`],
-    ["Total sessions", String(sessions.length)],
+    { label: "Current streak", value: `${currentStreak(sessions)} days`, icon: Flame },
+    { label: "Current week", value: `Week ${week}`, icon: TrendingUp },
+    { label: "This week", value: `${completedInWeek(sessions, week)} / 7 days`, icon: CalendarCheck },
+    { label: "Total sessions", value: String(sessions.length), icon: ListChecks },
   ];
 
   return (
@@ -42,10 +43,11 @@ export function ProgressScreen() {
       )}
 
       <section className="grid grid-cols-2 gap-2.5">
-        {stats.map(([label, value]) => (
+        {stats.map(({ label, value, icon: Icon }) => (
           <div key={label} className="surface rounded-2xl p-4">
-            <p className="muted text-xs">{label}</p>
-            <p className="mt-2 text-xl font-semibold">{value}</p>
+            <Icon className="accent" size={18} />
+            <p className="muted mt-3 text-xs">{label}</p>
+            <p className="mt-1 text-xl font-semibold">{value}</p>
           </div>
         ))}
       </section>

@@ -1611,3 +1611,8 @@ Build the complete application, not a mockup.
 Do not stop at static UI.
 
 All buttons, timers, navigation, completion tracking, persistence, PWA installation, progress tracking, week navigation, and workout flow must actually work.
+## 35. Real exercise image policy
+
+Use real, non-AI exercise reference images only when a suitable asset is actually available and its license permits reuse. Prefer Wikimedia Commons or another source with an explicit permissive license. Record the author, source URL, and license in the exercise data and show attribution on the exercise detail page.
+
+Do NOT generate replacement images when a suitable real reference image is unavailable. In those cases, keep the existing hand-authored before/after vector animation. Never use a mismatched exercise image merely to fill an empty slot.

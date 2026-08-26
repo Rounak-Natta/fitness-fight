@@ -6,7 +6,9 @@ import { exercises } from "@/data/exercises";
 import { dayOrder, routines, weekProgression } from "@/data/routines";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { ExerciseRow } from "@/components/exercise/exercise-row";
+import { ProgressRing } from "@/components/app-shell/progress-ring";
 import { calculateProgramWeek, dayKeyFromDate, formatDuration, formatToday, toLocalDateKey } from "@/lib/dates";
+import { currentStreak } from "@/lib/progress";
 import { useAppData } from "@/lib/use-app-data";
 
 export function TodayScreen() {
@@ -32,16 +34,22 @@ export function TodayScreen() {
   const session = data.completedSessions.find((item) => item.date === dateKey);
   const active = data.activeWorkout;
   const completedIds = new Set(session?.completedExerciseIds ?? []);
+  const streak = currentStreak(data.completedSessions);
 
   return (
     <AppShell>
       <header className="mb-6 pt-1">
-        <p className="muted text-sm font-medium">{formatToday(now)}</p>
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="accent text-xs font-semibold uppercase tracking-[.16em]">Week {week} · Day {dayOrder.indexOf(day) + 1}</p>
-          <p className="muted text-xs">Week {week} of 8</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="muted text-sm font-medium">{formatToday(now)}</p>
+            <p className="accent mt-3 text-xs font-semibold uppercase tracking-[.16em]">Week {week} · Day {dayOrder.indexOf(day) + 1}</p>
+            <h1 className="mt-2 text-[30px] font-semibold leading-[1.08] tracking-[-.035em]">{routine.title}</h1>
+          </div>
+          <div className="surface flex shrink-0 flex-col items-center gap-1 rounded-2xl px-3 py-2.5">
+            <ProgressRing value={week / 8} size={40} stroke={4} label={`${week}/8`} />
+            <span className="muted text-[10px] font-semibold uppercase tracking-[.08em]">{streak > 0 ? `${streak}d streak` : "Week"}</span>
+          </div>
         </div>
-        <h1 className="mt-2 text-[30px] font-semibold leading-[1.08] tracking-[-.035em]">{routine.title}</h1>
         <p className="muted mt-2 max-w-sm text-sm leading-6">{routine.description}</p>
         <p className="mt-3 rounded-xl subtle px-3 py-2 text-xs leading-5 muted"><strong className="text-[color:var(--text)]">{weekProgression[week - 1].name}:</strong> {weekProgression[week - 1].note}</p>
       </header>
